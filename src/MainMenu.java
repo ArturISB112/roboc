@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
 /**
  * Created by User on 10.11.2014.
@@ -19,8 +22,10 @@ public class MainMenu extends JComponent {
             g.drawImage(image, 0, 0, width, height, this);
     }
 
-    public static void paint() {
-        JFrame frame = new JFrame("Robocop");
+    public static void start() {
+        final Music musicmenu = new Music();
+        musicmenu.PlayMenu();
+       final JFrame frame = new JFrame("Robocop");
         frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
         MainMenu scene = new MainMenu();
         frame.add(scene);
@@ -33,6 +38,22 @@ public class MainMenu extends JComponent {
         frame.add(btn);
      btn.setBounds(50, 460, 120, 50);
         btn.setVisible(true);
+
+        btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                musicmenu.Stop();
+                final Music musicgame = new Music();
+                musicgame.PlayGame();
+                frame.dispose();
+                try {
+                    Playing.start();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
+            }
+        });
     }
 }
 

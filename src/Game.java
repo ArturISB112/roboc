@@ -3,7 +3,6 @@
  */
 public class Game {
     public static void main(String[] args) {
-        MainMenu.paint();
-        Music.Play();
+        MainMenu.start();
     }
 }
