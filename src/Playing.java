@@ -21,9 +21,11 @@ public class Playing extends JComponent {
  * Фоновое изображение
  */
         private BufferedImage background;
+        private BufferedImage model;
         public Playing() throws IOException {
 // Загружаем изображение из файла:
             background = ImageIO.read(getClass().getResource("game.png"));
+            model = ImageIO.read(getClass().getResource("model3.gif"));
 // Устанавливаем начальный размер компонента (высота - по высоте изображения)
             setPreferredSize(new Dimension(1100, background.getHeight()));
 // Для того, чтобы обрабатывать нажатия клавиш, компонент должен иметь фокус ввода:
@@ -47,7 +49,11 @@ public class Playing extends JComponent {
             Timer timer = new Timer(20, new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
 // Изменяем текущие координаты
-                    x += dx;
+                    if (dx<0 && x<5) {
+                        dx=0;
+                    } else {
+                        x += dx;
+                    }
 // Перерисовываем картинку
                     repaint();
                 }
@@ -76,8 +82,9 @@ public class Playing extends JComponent {
 // Продолжаем рисовать, пока не замостим весь экран:
         while (x1 < screenWidth) {
             g.drawImage(background, x1, 0, this);
-            x1 += imageWidth;
-        }
+           x1 += imageWidth;
+       }
+        g.drawImage(model, 50, getHeight()-275,170,240, this);
     }
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -85,7 +92,7 @@ public class Playing extends JComponent {
     }
     public static void start() throws IOException {
 // Создаем главное окно приложения с заголовком
-       JFrame frame = new JFrame("Background");
+       JFrame frame = new JFrame("RoboCop 3");
         frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
 // Создаем компонент...
         Playing scene = new Playing();
