@@ -3,6 +3,9 @@
  */
 public class Game {
     public static void main(String[] args) {
-        MainMenu.start();
+
+        MainMenu menu = new MainMenu();
+        menu.start();
+
     }
 }
