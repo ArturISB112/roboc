@@ -9,64 +9,73 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Playing extends JComponent {
-/**
- * Текущая координата
- */
-        private int x = 0;
-/**
- * Скорость движения (положительная - вправо, отрицательная - влево)
- */
-        private int dx = 0;
-/**
- * Фоновое изображение
- */
-        private BufferedImage background;
-        private BufferedImage model;
-        public Playing() throws IOException {
-// Загружаем изображение из файла:
-            background = ImageIO.read(getClass().getResource("game.png"));
-            model = ImageIO.read(getClass().getResource("model3.gif"));
-// Устанавливаем начальный размер компонента (высота - по высоте изображения)
-            setPreferredSize(new Dimension(1100, background.getHeight()));
-// Для того, чтобы обрабатывать нажатия клавиш, компонент должен иметь фокус ввода:
-            setFocusable(true);
-// Нажатия кнопок влево/вправо меняют скорость движения
-            addKeyListener(new KeyAdapter() {
-                public void keyPressed(KeyEvent e) {
-                    if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                        dx = -5;
-                    } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                        dx = 5;
-                    }
-                }
-                public void keyReleased(KeyEvent e) {
-                    if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                        dx=0;
-                    }
-                }
-            });
-// Таймер будет срабатывать каждые 20 миллисекунд (50 раз в секунду)
-            Timer timer = new Timer(20, new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-// Изменяем текущие координаты
-                    if (dx<0 && x<5) {
-                        dx=0;
-                    } else {
-                        x += dx;
-                    }
-// Перерисовываем картинку
-                    repaint();
-                }
-            });
-// Запускаем таймер:
-            timer.start();
-        }
+    /**
+     * Текущая координата
+     */
+    private int x = 0;
+    /**
+     * Скорость движения (положительная - вправо, отрицательная - влево)
+     */
+    private int dx = 0;
+    /**
+     * Фоновое изображение
+     */
+    private BufferedImage background;
+    private Image model;
+    private boolean isright=true;
 
-/**
- * Рисование фона
- * @param g графический контекст
- * @param x текущие координаты
- */
+    public Playing() throws IOException {
+// Загружаем изображение из файла:
+        background = ImageIO.read(getClass().getResource("game.png"));
+     //   model = getToolkit().getImage(getClass().getResource("model3.gif"));
+        model = getToolkit().getImage(getClass().getResource("herostop.png"));
+// Устанавливаем начальный размер компонента (высота - по высоте изображения)
+        setPreferredSize(new Dimension(1100, background.getHeight()));
+// Для того, чтобы обрабатывать нажатия клавиш, компонент должен иметь фокус ввода:
+        setFocusable(true);
+// Нажатия кнопок влево/вправо меняют скорость движения
+        addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                model = getToolkit().getImage(getClass().getResource("model3.gif"));
+                if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    dx = -5;
+                    isright=false;
+                } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    dx = 5;
+                    isright=true;
+                }
+            }
+
+            public void keyReleased(KeyEvent e) {
+                model = getToolkit().getImage(getClass().getResource("herostop.png"));
+                if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    dx = 0;
+                }
+            }
+        });
+// Таймер будет срабатывать каждые 20 миллисекунд (50 раз в секунду)
+        Timer timer = new Timer(20, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+// Изменяем текущие координаты
+                if (dx < 0 && x < 5) {
+                    dx = 0;
+                } else {
+                    x += dx;
+                }
+// Перерисовываем картинку
+                repaint();
+            }
+        });
+// Запускаем таймер:
+        timer.start();
+    }
+
+    /**
+     * Рисование фона
+     *
+     * @param g графический контекст
+     * @param x текущие координаты
+     */
     private void drawBackground(Graphics g, int x) {
 // Определяем ширину экрана:
         int screenWidth = getWidth();
@@ -82,17 +91,19 @@ public class Playing extends JComponent {
 // Продолжаем рисовать, пока не замостим весь экран:
         while (x1 < screenWidth) {
             g.drawImage(background, x1, 0, this);
-           x1 += imageWidth;
-       }
-        g.drawImage(model, 50, getHeight()-275,170,240, this);
+            x1 += imageWidth;
+        }
+        g.drawImage(model, isright ? 50 : 220, getHeight() - 285, isright ? 170 : -170, 240, this);
     }
+
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         drawBackground(g, x);
     }
+
     public static void start() throws IOException {
 // Создаем главное окно приложения с заголовком
-       JFrame frame = new JFrame("RoboCop 3");
+        JFrame frame = new JFrame("RoboCop 3");
         frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
 // Создаем компонент...
         Playing scene = new Playing();
