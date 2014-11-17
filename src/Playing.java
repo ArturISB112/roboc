@@ -74,7 +74,7 @@ public class Playing extends JComponent {
                 }
                 if (jumping) {
                     y += dy;
-                    dy -= 5;
+                    dy -= 2;
                     if (y <= 0) {
                         y = 0;
                         jumping = false;
@@ -112,7 +112,7 @@ public class Playing extends JComponent {
             x1 += imageWidth;
         }
         Image image = dx != 0 ? modelWalk : modelStop;
-        g.drawImage(image, isright ? 50 : 220, getHeight() - 285 - y, isright ? 170 : -170, 240, this);
+        g.drawImage(image, isright ? 50 : 190, getHeight() - 265 - y, isright ? 150 : -150, 225, this);
     }
 
     protected void paintComponent(Graphics g) {
