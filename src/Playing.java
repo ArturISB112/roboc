@@ -17,18 +17,24 @@ public class Playing extends JComponent {
      * Скорость движения (положительная - вправо, отрицательная - влево)
      */
     private int dx = 0;
+
+    private int y = 0;
+    private int dy = 0;
+    private boolean jumping = false;
     /**
      * Фоновое изображение
      */
     private BufferedImage background;
-    private Image model;
+    private Image modelStop;
+    private Image modelWalk;
     private boolean isright=true;
 
     public Playing() throws IOException {
 // Загружаем изображение из файла:
         background = ImageIO.read(getClass().getResource("game.png"));
      //   model = getToolkit().getImage(getClass().getResource("model3.gif"));
-        model = getToolkit().getImage(getClass().getResource("herostop.png"));
+        modelStop = getToolkit().getImage(getClass().getResource("herostop.png"));
+        modelWalk = getToolkit().getImage(getClass().getResource("model3.gif"));
 // Устанавливаем начальный размер компонента (высота - по высоте изображения)
         setPreferredSize(new Dimension(1100, background.getHeight()));
 // Для того, чтобы обрабатывать нажатия клавиш, компонент должен иметь фокус ввода:
@@ -36,18 +42,22 @@ public class Playing extends JComponent {
 // Нажатия кнопок влево/вправо меняют скорость движения
         addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
-                model = getToolkit().getImage(getClass().getResource("model3.gif"));
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                     dx = -5;
                     isright=false;
                 } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     dx = 5;
                     isright=true;
+                } else if (e.getKeyCode() == KeyEvent.VK_UP && !jumping) {
+                    dy =35;
+                    jumping = true;
+                } else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+                    System.out.println("Fire!");
                 }
             }
 
             public void keyReleased(KeyEvent e) {
-                model = getToolkit().getImage(getClass().getResource("herostop.png"));
+                modelStop = getToolkit().getImage(getClass().getResource("herostop.png"));
                 if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     dx = 0;
                 }
@@ -61,6 +71,14 @@ public class Playing extends JComponent {
                     dx = 0;
                 } else {
                     x += dx;
+                }
+                if (jumping) {
+                    y += dy;
+                    dy -= 5;
+                    if (y <= 0) {
+                        y = 0;
+                        jumping = false;
+                    }
                 }
 // Перерисовываем картинку
                 repaint();
@@ -93,7 +111,8 @@ public class Playing extends JComponent {
             g.drawImage(background, x1, 0, this);
             x1 += imageWidth;
         }
-        g.drawImage(model, isright ? 50 : 220, getHeight() - 285, isright ? 170 : -170, 240, this);
+        Image image = dx != 0 ? modelWalk : modelStop;
+        g.drawImage(image, isright ? 50 : 220, getHeight() - 285 - y, isright ? 170 : -170, 240, this);
     }
 
     protected void paintComponent(Graphics g) {
