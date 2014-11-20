@@ -9,8 +9,9 @@ import java.io.IOException;
 public class MainMenu extends JComponent {
 
     private Rectangle button = new Rectangle(50, 460, 120, 50);
+    private Image img = getToolkit().getImage(getClass().getResource("startgameonmove.png"));
     private Music musicmenu = new Music();
-    public JFrame frame = new JFrame("Robocop");
+    public JFrame frame = new JFrame("Robocop v0.1");
 
     public MainMenu() {
         setPreferredSize(new Dimension(800, 600));
@@ -33,7 +34,7 @@ public class MainMenu extends JComponent {
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-
+                img = getToolkit().getImage(getClass().getResource("startgameonmove.png"));
             }
         });
     }
@@ -47,9 +48,8 @@ public class MainMenu extends JComponent {
         Image image = getToolkit().getImage(getClass().getResource("Robocop3.jpg"));
         g.drawImage(image, 0, 0, width, height, this);
         g.setColor(Color.red);
-        g.fillRect(button.x, button.y, button.width, button.height);
-        g.setColor(Color.white);
-        g.drawString("Start", button.x + 45, button.y + 30);
+       // Image img = getToolkit().getImage(getClass().getResource("startgame.png"));
+        g.drawImage(img, 50, 440, 150,60, this);
     }
 
     public void start() {

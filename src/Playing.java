@@ -21,12 +21,16 @@ public class Playing extends JComponent {
     private int y = 0;
     private int dy = 0;
     private boolean jumping = false;
+    private boolean sitdown=false;
+    private boolean situp=false;
     /**
      * Фоновое изображение
      */
     private BufferedImage background;
     private Image modelStop;
     private Image modelWalk;
+    private Image modelSittingDown;
+    private Image modelSitUp;
     private boolean isright=true;
 
     public Playing() throws IOException {
@@ -35,6 +39,7 @@ public class Playing extends JComponent {
      //   model = getToolkit().getImage(getClass().getResource("model3.gif"));
         modelStop = getToolkit().getImage(getClass().getResource("herostop.png"));
         modelWalk = getToolkit().getImage(getClass().getResource("model3.gif"));
+        modelSitUp = getToolkit().getImage(getClass().getResource("sittingup.gif"));
 // Устанавливаем начальный размер компонента (высота - по высоте изображения)
         setPreferredSize(new Dimension(1100, background.getHeight()));
 // Для того, чтобы обрабатывать нажатия клавиш, компонент должен иметь фокус ввода:
@@ -49,10 +54,12 @@ public class Playing extends JComponent {
                     dx = 5;
                     isright=true;
                 } else if (e.getKeyCode() == KeyEvent.VK_UP && !jumping) {
-                    dy =35;
+                    dy =23;
                     jumping = true;
                 } else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
                     System.out.println("Fire!");
+                } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    sitdown=true;
                 }
             }
 
@@ -60,6 +67,9 @@ public class Playing extends JComponent {
                 modelStop = getToolkit().getImage(getClass().getResource("herostop.png"));
                 if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     dx = 0;
+                } else if (e.getKeyCode() == KeyEvent.VK_DOWN){
+                    sitdown=false;
+                    situp=true;
                 }
             }
         });
@@ -67,18 +77,21 @@ public class Playing extends JComponent {
         Timer timer = new Timer(20, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 // Изменяем текущие координаты
-                if (dx < 0 && x < 5) {
+                if (dx < 0 && x < 5 || sitdown==true) {
                     dx = 0;
                 } else {
                     x += dx;
                 }
                 if (jumping) {
                     y += dy;
-                    dy -= 2;
+                    dy -= 1;
                     if (y <= 0) {
                         y = 0;
                         jumping = false;
                     }
+                }
+                if (situp) {
+                    situp=false;
                 }
 // Перерисовываем картинку
                 repaint();
@@ -111,8 +124,16 @@ public class Playing extends JComponent {
             g.drawImage(background, x1, 0, this);
             x1 += imageWidth;
         }
-        Image image = dx != 0 ? modelWalk : modelStop;
-        g.drawImage(image, isright ? 50 : 190, getHeight() - 265 - y, isright ? 150 : -150, 225, this);
+        Image image;
+        if (sitdown){
+        modelSittingDown = getToolkit().getImage(getClass().getResource("sittingdown.gif"));
+        image = modelSittingDown;
+        } else if (situp) {
+            image = modelSitUp;
+        } else {
+            image = dx != 0 ? modelWalk : modelStop;
+        }
+         g.drawImage(image, isright ? 50 : 190, getHeight() - 265 - y, isright ? 150 : -150, 225, this);
     }
 
     protected void paintComponent(Graphics g) {
