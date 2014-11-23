@@ -7,6 +7,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Engine extends JComponent {
     /**
@@ -16,6 +17,7 @@ public class Engine extends JComponent {
     /**
      * Скорость движения (положительная - вправо, отрицательная - влево)
      */
+    private int HeroX, HeroY = 0;
     private int dx = 0;
     private int sitmodelcount = 0;
     private int y = 0;
@@ -24,11 +26,14 @@ public class Engine extends JComponent {
     private boolean sitdown=false;
     private boolean situp=false;
     private boolean isright=true;
+    private boolean canfire=true;
+    private int reload = -1;
     private BufferedImage background;
     private Image modelStop, modelWalk, modelJump;
     private Image modelSittingDown1,modelSittingDown2,modelSittingDown3;
     private Image image;
-
+    private Image PatronHero;
+    private ArrayList<Bullet> Bullets = new ArrayList<Bullet>();
     public Engine() throws IOException {
 // Загружаем изображение из файла:
         background = ImageIO.read(getClass().getResource("game.png"));
@@ -39,6 +44,7 @@ public class Engine extends JComponent {
         modelSittingDown1 = getToolkit().getImage(getClass().getResource("sittingdown1.png"));
         modelSittingDown2 = getToolkit().getImage(getClass().getResource("sittingdown2.png"));
         modelSittingDown3 = getToolkit().getImage(getClass().getResource("sittingdown3.png"));
+        PatronHero =getToolkit().getImage(getClass().getResource("bullet.png"));
         image = modelStop;
 // Устанавливаем начальный размер компонента (высота - по высоте изображения)
         setPreferredSize(new Dimension(1100, background.getHeight()));
@@ -56,10 +62,17 @@ public class Engine extends JComponent {
                 } else if (e.getKeyCode() == KeyEvent.VK_UP && !jumping) {
                     dy =18.0;
                     jumping = true;
-                } else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
-                    System.out.println("Fire!");
+                } else if (e.getKeyCode() == KeyEvent.VK_CONTROL && canfire) {
+                    canfire=false;
                     Music shoot = new Music();
                     shoot.PlayHeroShoot();
+                    if (isright) {
+                        Bullet a = new Bullet(HeroX + 150, HeroY + 63, isright);
+                        Bullets.add(a);
+                    } else {
+                        Bullet a = new Bullet(HeroX-150, HeroY + 63, isright);
+                        Bullets.add(a);
+                    }
                 } else if (e.getKeyCode() == KeyEvent.VK_DOWN && !sitdown && !jumping) {
                     sitdown=true;
                     situp=false;
@@ -77,12 +90,22 @@ public class Engine extends JComponent {
                     situp=true;
                     sitmodelcount=4;
                 }
+                if (e.getKeyCode() == KeyEvent.VK_CONTROL && !canfire){
+                    reload=0;
+                }
             }
         });
 // Таймер будет срабатывать каждые 20 миллисекунд (50 раз в секунду)
         Timer timer = new Timer(20, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 // Изменяем текущие координаты
+                if (reload>=4){
+                    canfire=true;
+                    reload=-1;
+                }
+                if (reload>=0 && reload<=5){
+                    reload++;
+                }
                 if (dx < 0 && x < 5 || sitdown == true) {
                     dx = 0;
                 } else {
@@ -175,8 +198,19 @@ public class Engine extends JComponent {
         } else{
             image = dx != 0 ? modelWalk : modelStop;
         }
-         g.drawImage(image, isright ? 50 : 190, getHeight() - 265 - y, isright ? 150 : -150, 225, this);
+        HeroX=isright ? 50 : 190;
+        HeroY=getHeight() - 265 - y;
+         g.drawImage(image, HeroX, HeroY, isright ? 150 : -150, 225, this);
         g.setColor(Color.white);
+        for (Bullet s:Bullets){
+            if (s.GetX()>screenWidth+15){
+                Bullets.remove(s);
+            }
+        }
+        for (Bullet s: Bullets){
+         g.drawImage(PatronHero,s.GetX(),s.GetY(),22,21,this);
+
+        }
         g.draw3DRect(screenWidth-300,20,230,45,true);
         g.setColor(Color.red);
         g.fillRect(screenWidth-300,20,230,45);

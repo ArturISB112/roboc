@@ -11,7 +11,7 @@ public class MainMenu extends JComponent {
     private Rectangle button = new Rectangle(50, 460, 120, 50);
     private Image img = getToolkit().getImage(getClass().getResource("startgameonmove.png"));
     private Music musicmenu = new Music();
-    public JFrame frame = new JFrame("Robocop v0.1");
+    public JFrame frame = new JFrame("Robocop v0.2");
 
     public MainMenu() {
         setPreferredSize(new Dimension(800, 600));
