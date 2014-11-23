@@ -24,7 +24,7 @@ public class MainMenu extends JComponent {
                     musicgame.PlayGame();
                     frame.dispose();
                     try {
-                        Playing.start();
+                        Engine.start();
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
@@ -63,29 +63,6 @@ public class MainMenu extends JComponent {
         frame.setLocationRelativeTo(null);
         frame.setLayout(null);
         frame.setVisible(true);
-     /*   JButton btn = new JButton("New game");
-        frame.add(btn);
-        frame.setComponentZOrder(scene, 0);
-        frame.setComponentZOrder(btn, 1);
-        scene.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-        btn.setBounds(50, 460, 120, 50);
-        btn.setVisible(true);
-
-        btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                musicmenu.Stop();
-                final Music musicgame = new Music();
-                musicgame.PlayGame();
-                frame.dispose();
-                try {
-                    Playing.start();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-
-            }
-        }); */
     }
 }
 

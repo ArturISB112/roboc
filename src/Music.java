@@ -13,7 +13,6 @@ public class Music {
     public void PlayMenu() {
         try {
             File soundFile = new File("Robocop.wav");
-
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
             clip = AudioSystem.getClip();
             clip.open(ais);
@@ -43,6 +42,46 @@ public class Music {
             clip = AudioSystem.getClip();
             clip.open(ais);
             clip.loop(clip.LOOP_CONTINUOUSLY);
+            clip.setFramePosition(0); //устанавливаем указатель на старт
+            clip.start(); //Поехали!!!
+            //   Thread.sleep(clip.getMicrosecondLength()/1000);
+            //    clip.stop(); //Останавливаем
+            //     clip.close(); //Закрываем
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void PlayFalling() {
+        try {
+            File soundFile = new File("Fall.wav");
+            AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
+            clip = AudioSystem.getClip();
+            clip.open(ais);
+            clip.loop(0);
+            clip.setFramePosition(0); //устанавливаем указатель на старт
+            clip.start(); //Поехали!!!
+            //   Thread.sleep(clip.getMicrosecondLength()/1000);
+            //    clip.stop(); //Останавливаем
+            //     clip.close(); //Закрываем
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void PlayHeroShoot() {
+        try {
+            File soundFile = new File("shoothero.wav");
+            AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
+            clip = AudioSystem.getClip();
+            clip.open(ais);
+            clip.loop(0);
             clip.setFramePosition(0); //устанавливаем указатель на старт
             clip.start(); //Поехали!!!
             //   Thread.sleep(clip.getMicrosecondLength()/1000);

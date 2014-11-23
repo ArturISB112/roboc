@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class Playing extends JComponent {
+public class Engine extends JComponent {
     /**
      * Текущая координата
      */
@@ -17,29 +17,29 @@ public class Playing extends JComponent {
      * Скорость движения (положительная - вправо, отрицательная - влево)
      */
     private int dx = 0;
-
+    private int sitmodelcount = 0;
     private int y = 0;
-    private int dy = 0;
+    private double dy = 0;
     private boolean jumping = false;
     private boolean sitdown=false;
     private boolean situp=false;
-    /**
-     * Фоновое изображение
-     */
-    private BufferedImage background;
-    private Image modelStop;
-    private Image modelWalk;
-    private Image modelSittingDown;
-    private Image modelSitUp;
     private boolean isright=true;
+    private BufferedImage background;
+    private Image modelStop, modelWalk, modelJump;
+    private Image modelSittingDown1,modelSittingDown2,modelSittingDown3;
+    private Image image;
 
-    public Playing() throws IOException {
+    public Engine() throws IOException {
 // Загружаем изображение из файла:
         background = ImageIO.read(getClass().getResource("game.png"));
      //   model = getToolkit().getImage(getClass().getResource("model3.gif"));
         modelStop = getToolkit().getImage(getClass().getResource("herostop.png"));
         modelWalk = getToolkit().getImage(getClass().getResource("model3.gif"));
-        modelSitUp = getToolkit().getImage(getClass().getResource("sittingup.gif"));
+        modelJump = getToolkit().getImage(getClass().getResource("herojump.png"));
+        modelSittingDown1 = getToolkit().getImage(getClass().getResource("sittingdown1.png"));
+        modelSittingDown2 = getToolkit().getImage(getClass().getResource("sittingdown2.png"));
+        modelSittingDown3 = getToolkit().getImage(getClass().getResource("sittingdown3.png"));
+        image = modelStop;
 // Устанавливаем начальный размер компонента (высота - по высоте изображения)
         setPreferredSize(new Dimension(1100, background.getHeight()));
 // Для того, чтобы обрабатывать нажатия клавиш, компонент должен иметь фокус ввода:
@@ -54,12 +54,17 @@ public class Playing extends JComponent {
                     dx = 5;
                     isright=true;
                 } else if (e.getKeyCode() == KeyEvent.VK_UP && !jumping) {
-                    dy =23;
+                    dy =18.0;
                     jumping = true;
                 } else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
                     System.out.println("Fire!");
-                } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    Music shoot = new Music();
+                    shoot.PlayHeroShoot();
+                } else if (e.getKeyCode() == KeyEvent.VK_DOWN && !sitdown && !jumping) {
                     sitdown=true;
+                    situp=false;
+                    sitmodelcount=0;
+
                 }
             }
 
@@ -67,9 +72,10 @@ public class Playing extends JComponent {
                 modelStop = getToolkit().getImage(getClass().getResource("herostop.png"));
                 if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     dx = 0;
-                } else if (e.getKeyCode() == KeyEvent.VK_DOWN){
+                } else if (e.getKeyCode() == KeyEvent.VK_DOWN && sitdown){
                     sitdown=false;
                     situp=true;
+                    sitmodelcount=4;
                 }
             }
         });
@@ -77,21 +83,32 @@ public class Playing extends JComponent {
         Timer timer = new Timer(20, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 // Изменяем текущие координаты
-                if (dx < 0 && x < 5 || sitdown==true) {
+                if (dx < 0 && x < 5 || sitdown == true) {
                     dx = 0;
                 } else {
                     x += dx;
                 }
-                if (jumping) {
-                    y += dy;
-                    dy -= 1;
-                    if (y <= 0) {
-                        y = 0;
-                        jumping = false;
+                if (sitdown) {
+                    sitmodelcount++;
+                    if (sitmodelcount > 3) {
+                        sitmodelcount = 4;
                     }
                 }
                 if (situp) {
-                    situp=false;
+                    sitmodelcount--;
+                    if (sitmodelcount < 0) {
+                        sitmodelcount = -1;
+                    }
+                }
+                if (jumping) {
+                    y += dy;
+                    dy -= 0.5;
+                    if (y <= 0) {
+                        y = 0;
+                        Music jump = new Music();
+                        jump.PlayFalling();
+                        jumping = false;
+                    }
                 }
 // Перерисовываем картинку
                 repaint();
@@ -124,17 +141,49 @@ public class Playing extends JComponent {
             g.drawImage(background, x1, 0, this);
             x1 += imageWidth;
         }
-        Image image;
-        if (sitdown){
-        modelSittingDown = getToolkit().getImage(getClass().getResource("sittingdown.gif"));
-        image = modelSittingDown;
+        if (sitdown && !jumping){
+            switch (sitmodelcount) {
+                case 1:
+                    image=modelSittingDown1;
+                    break;
+                case 2:
+                    image=modelSittingDown2;
+                    break;
+                case 3:
+                    image = modelSittingDown3;
+                    break;
+            }
         } else if (situp) {
-            image = modelSitUp;
-        } else {
+            switch (sitmodelcount) {
+                case 0:
+                    image = modelStop;
+                    break;
+                case 1:
+                    image=modelSittingDown1;
+                    break;
+                case 2:
+                    image=modelSittingDown2;
+                    break;
+                case 3:
+                    image = modelSittingDown3;
+                    situp=false;
+                    break;
+            }
+
+        } else if (jumping) {
+            image = modelJump;
+        } else{
             image = dx != 0 ? modelWalk : modelStop;
         }
          g.drawImage(image, isright ? 50 : 190, getHeight() - 265 - y, isright ? 150 : -150, 225, this);
+        g.setColor(Color.white);
+        g.draw3DRect(screenWidth-300,20,230,45,true);
+        g.setColor(Color.red);
+        g.fillRect(screenWidth-300,20,230,45);
+        g.setColor(Color.yellow);
+        g.drawString("100%",screenWidth-220,45);
     }
+
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -146,7 +195,7 @@ public class Playing extends JComponent {
         JFrame frame = new JFrame("RoboCop 3");
         frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
 // Создаем компонент...
-        Playing scene = new Playing();
+        Engine scene = new Engine();
 // ...и добавляем его в окно
         frame.add(scene, BorderLayout.CENTER);
 // Авто-определение размера окна
