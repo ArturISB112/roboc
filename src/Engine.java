@@ -55,14 +55,14 @@ public class Engine extends JComponent {
         modelSittingDown3.getWidth(this);
         PatronHero = getToolkit().getImage(getClass().getResource("bullet.png"));
         image = modelStop;
-        EnvObj yashik1 = new EnvObj(2460, 0, 110, 70);
-        EnvObj yashik2 = new EnvObj(2560,0,180,140);
-        EnvObj yashik3 = new EnvObj(3825,0,275,70);
-        EnvObj yashik4 = new EnvObj(5020,0,200,150);
-        EnvObj yashik5 = new EnvObj(5220,0,80,70);
-        EnvObj yashik6 = new EnvObj(6380,0,200,70);
-        EnvObj yashik7 = new EnvObj(8915,0,110,70);
-        EnvObj yashik8 = new EnvObj(9020,0,185,150);
+        EnvObj yashik1 = new EnvObj(2460, 0, 110, 70, "yashik");
+        EnvObj yashik2 = new EnvObj(2560, 0, 180, 140, "yashik");
+        EnvObj yashik3 = new EnvObj(3825, 0, 275, 70, "yashik");
+        EnvObj yashik4 = new EnvObj(5020, 0, 200, 150, "yashik");
+        EnvObj yashik5 = new EnvObj(5220, 0, 80, 70, "yashik");
+        EnvObj yashik6 = new EnvObj(6380, 0, 200, 70, "yashik");
+        EnvObj yashik7 = new EnvObj(8915, 0, 110, 70, "yashik");
+        EnvObj yashik8 = new EnvObj(9020, 0, 185, 150, "yashik");
         objcts.add(yashik1);
         objcts.add(yashik2);
         objcts.add(yashik3);
@@ -71,6 +71,11 @@ public class Engine extends JComponent {
         objcts.add(yashik6);
         objcts.add(yashik7);
         objcts.add(yashik8);
+        EnvObj doroga1 = new EnvObj(1505, 380, 1090, 1, "doroga");
+        EnvObj doroga2 = new EnvObj(4815,450,255,1,"doroga");
+        objcts.add(doroga1);
+        objcts.add(doroga2);
+
 // Устанавливаем начальный размер компонента (высота - по высоте изображения)
         setPreferredSize(new Dimension(1100, background.getHeight()));
 // Для того, чтобы обрабатывать нажатия клавиш, компонент должен иметь фокус ввода:
@@ -139,29 +144,35 @@ public class Engine extends JComponent {
                 if (reload >= 0 && reload <= 7) {
                     reload++;
                 }
-                if ((dx < 0 && x < 5) || sitdown == true || (dx>0 && x >=10555 ) ) {
+                if ((dx < 0 && x < 5) || sitdown == true || (dx > 0 && x >= 10555)) {
                     dx = 0;
                 } else {
-                    objFound=false;
+                    objFound = false;
                     for (EnvObj d : objcts) {
-                        if (x + dx >= d.x && x + dx < d.x + d.width && y < d.y + d.height) {
-                            dx = 0;
-                            objFound=true;
+                        if (d.tip.equals("yashik")) {
+                            if (x + dx >= d.x && x + dx < d.x + d.width && y < d.y + d.height) {
+                                dx = 0;
+                                objFound = true;
+                            }
+                            if (x + dx >= d.x && x + dx < d.x + d.width && y >= d.y + d.height) {
+                                objFound = true;
+                                floor = d.height;
+                            }
+                        } else {
+                            if (x + dx >= d.x && x + dx < d.x + d.width && y >= d.y + d.height){
+                                objFound=true;
+                                floor=d.y+d.height;                            }
                         }
-                        if (x+dx >= d.x && x+dx < d.x+d.width && y>=d.y+d.height){
-                            objFound=true;
-                           floor=d.height;
-                       }
                     }
                     x += dx;
-                    if (!(objFound)){
-                        floor=0;
-                        if (y>floor && !jumping){
-                            falling=true;
+                    if (!(objFound)) {
+                        floor = 0;
+                        if (y > floor && !jumping) {
+                            falling = true;
                         }
-                    } else if (floor<y && !jumping){
-                            falling=true;
-                        }
+                    } else if (floor < y && !jumping) {
+                        falling = true;
+                    }
                 }
                 if (sitdown) {
                     sitmodelcount++;
@@ -178,16 +189,16 @@ public class Engine extends JComponent {
                 if (jumping && !falling) {
                     dy -= 0.5;
                     y += dy;
-                    if (y+dy <= floor) {
+                    if (y + dy <= floor) {
                         y = floor;
                         Music.getMusic().PlayFalling();
                         jumping = false;
                     }
                 }
-                if (falling){
+                if (falling) {
                     dy -= 0.5;
                     y += dy;
-                    if (y+dy <= floor) {
+                    if (y + dy <= floor) {
                         y = floor;
                         Music.getMusic().PlayFalling();
                         falling = false;
