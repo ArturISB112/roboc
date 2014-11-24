@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Engine extends JComponent {
     /**
@@ -23,29 +24,35 @@ public class Engine extends JComponent {
     private int y = 0;
     private double dy = 0;
     private boolean jumping = false;
-    private boolean sitdown=false;
-    private boolean situp=false;
-    private boolean isright=true;
-    private boolean canfire=true;
+    private boolean sitdown = false;
+    private boolean situp = false;
+    private static boolean isright = true;
+    private boolean canfire = true;
     private int reload = -1;
     private BufferedImage background;
     private Image modelStop, modelWalk, modelJump;
-    private Image modelSittingDown1,modelSittingDown2,modelSittingDown3;
+    private Image modelSittingDown1, modelSittingDown2, modelSittingDown3;
     private Image image;
     private Image PatronHero;
     private ArrayList<Bullet> Bullets = new ArrayList<Bullet>();
+    private ArrayList<EnvObj> objcts = new ArrayList<EnvObj>();
     public Engine() throws IOException {
 // Загружаем изображение из файла:
         background = ImageIO.read(getClass().getResource("game.png"));
-     //   model = getToolkit().getImage(getClass().getResource("model3.gif"));
+        //   model = getToolkit().getImage(getClass().getResource("model3.gif"));
         modelStop = getToolkit().getImage(getClass().getResource("herostop.png"));
         modelWalk = getToolkit().getImage(getClass().getResource("model3.gif"));
         modelJump = getToolkit().getImage(getClass().getResource("herojump.png"));
         modelSittingDown1 = getToolkit().getImage(getClass().getResource("sittingdown1.png"));
         modelSittingDown2 = getToolkit().getImage(getClass().getResource("sittingdown2.png"));
         modelSittingDown3 = getToolkit().getImage(getClass().getResource("sittingdown3.png"));
-        PatronHero =getToolkit().getImage(getClass().getResource("bullet.png"));
+        modelSittingDown1.getWidth(this);
+        modelSittingDown2.getWidth(this);
+        modelSittingDown3.getWidth(this);
+        PatronHero = getToolkit().getImage(getClass().getResource("bullet.png"));
         image = modelStop;
+        EnvObj pregrada = new EnvObj(440,30,20,30);
+        objcts.add(pregrada);
 // Устанавливаем начальный размер компонента (высота - по высоте изображения)
         setPreferredSize(new Dimension(1100, background.getHeight()));
 // Для того, чтобы обрабатывать нажатия клавиш, компонент должен иметь фокус ввода:
@@ -55,43 +62,41 @@ public class Engine extends JComponent {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                     dx = -5;
-                    isright=false;
+                    isright = false;
                 } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     dx = 5;
-                    isright=true;
+                    isright = true;
                 } else if (e.getKeyCode() == KeyEvent.VK_UP && !jumping) {
-                    dy =18.0;
+                    dy = 18.0;
                     jumping = true;
                 } else if (e.getKeyCode() == KeyEvent.VK_CONTROL && canfire) {
-                    canfire=false;
-                    Music shoot = new Music();
-                    shoot.PlayHeroShoot();
+                    canfire = false;
+                    Music.getMusic().PlayHeroShoot();
                     if (isright) {
                         Bullet a = new Bullet(HeroX + 145, HeroY + 63, isright);
                         Bullets.add(a);
                     } else {
-                        Bullet a = new Bullet(HeroX-152, HeroY + 63, isright);
+                        Bullet a = new Bullet(HeroX - 152, HeroY + 63, isright);
                         Bullets.add(a);
                     }
                 } else if (e.getKeyCode() == KeyEvent.VK_DOWN && !sitdown && !jumping) {
-                    sitdown=true;
-                    situp=false;
-                    sitmodelcount=0;
-
+                    sitdown = true;
+                    situp = false;
+                    sitmodelcount = 0;
                 }
             }
 
             public void keyReleased(KeyEvent e) {
-                modelStop = getToolkit().getImage(getClass().getResource("herostop.png"));
+                //modelStop = getToolkit().getImage(getClass().getResource("herostop.png"));
                 if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     dx = 0;
-                } else if (e.getKeyCode() == KeyEvent.VK_DOWN && sitdown){
-                    sitdown=false;
-                    situp=true;
-                    sitmodelcount=4;
+                } else if (e.getKeyCode() == KeyEvent.VK_DOWN && sitdown) {
+                    sitdown = false;
+                    situp = true;
+                    sitmodelcount = 4;
                 }
-                if (e.getKeyCode() == KeyEvent.VK_CONTROL && !canfire){
-                    reload=0;
+                if (e.getKeyCode() == KeyEvent.VK_CONTROL && !canfire) {
+                    reload = 0;
                 }
             }
         });
@@ -99,17 +104,23 @@ public class Engine extends JComponent {
         Timer timer = new Timer(20, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 // Изменяем текущие координаты
-                if (reload>=4){
-                    canfire=true;
-                    reload=-1;
+                if (reload >= 4) {
+                    canfire = true;
+                    reload = -1;
                 }
-                if (reload>=0 && reload<=5){
+                if (reload >= 0 && reload <= 5) {
                     reload++;
                 }
                 if (dx < 0 && x < 5 || sitdown == true) {
                     dx = 0;
                 } else {
-                    x += dx;
+                    int x1 = x + dx;
+                    for (EnvObj d : objcts){
+                        if (x1>d.x){
+                            x1 = d.x;
+                        }
+                    }
+                    x = x1;
                 }
                 if (sitdown) {
                     sitmodelcount++;
@@ -128,8 +139,7 @@ public class Engine extends JComponent {
                     dy -= 0.5;
                     if (y <= 0) {
                         y = 0;
-                        Music jump = new Music();
-                        jump.PlayFalling();
+                        Music.getMusic().PlayFalling();
                         jumping = false;
                     }
                 }
@@ -164,13 +174,13 @@ public class Engine extends JComponent {
             g.drawImage(background, x1, 0, this);
             x1 += imageWidth;
         }
-        if (sitdown && !jumping){
+        if (sitdown && !jumping) {
             switch (sitmodelcount) {
                 case 1:
-                    image=modelSittingDown1;
+                    image = modelSittingDown1;
                     break;
                 case 2:
-                    image=modelSittingDown2;
+                    image = modelSittingDown2;
                     break;
                 case 3:
                     image = modelSittingDown3;
@@ -182,41 +192,44 @@ public class Engine extends JComponent {
                     image = modelStop;
                     break;
                 case 1:
-                    image=modelSittingDown1;
+                    image = modelSittingDown1;
                     break;
                 case 2:
-                    image=modelSittingDown2;
+                    image = modelSittingDown2;
                     break;
                 case 3:
                     image = modelSittingDown3;
-                    situp=false;
+                    situp = false;
                     break;
             }
 
         } else if (jumping) {
             image = modelJump;
-        } else{
+        } else {
             image = dx != 0 ? modelWalk : modelStop;
         }
-        HeroX=isright ? 50 : 190;
-        HeroY=getHeight() - 265 - y;
-         g.drawImage(image, HeroX, HeroY, isright ? 150 : -150, 225, this);
+        HeroX = isright ? 50 : 190;
+        HeroY = getHeight() - 265 - y;
+        g.drawImage(image, HeroX, HeroY, isright ? 150 : -150, 225, this);
         g.setColor(Color.white);
-     /*   for (Bullet s:Bullets){
-            if (s.GetX()>screenWidth+15){
-                Bullets.remove(s);
+        for (Iterator<Bullet> i = Bullets.iterator(); i.hasNext(); ) {
+            Bullet s = i.next();
+            if (s.GetX() > screenWidth + 15) {
+                //Bullets.remove(s);
+                i.remove();
             }
-        } */
-        for (Bullet s: Bullets){
-         g.drawImage(PatronHero,s.GetX(),s.GetY(),22,21,this);
+        }
+        for (Bullet s : Bullets) {
+            g.drawImage(PatronHero, s.GetX(), s.GetY(), 22, 21, this);
 
         }
-        g.draw3DRect(screenWidth-300,20,230,45,true);
+        g.draw3DRect(screenWidth - 300, 20, 230, 45, true);
         g.setColor(Color.red);
-        g.fillRect(screenWidth-300,20,230,45);
+        g.fillRect(screenWidth - 300, 20, 230, 45);
         g.setColor(Color.yellow);
-        g.drawString("100%",screenWidth-200,45);
-        g.drawString(String.valueOf(x), 50,50);
+        g.drawString("100%", screenWidth - 200, 45);
+        g.drawString("X="+String.valueOf(x), 50, 50);
+        g.drawString("Y="+String.valueOf(y),50,75);
     }
 
 
@@ -242,8 +255,11 @@ public class Engine extends JComponent {
         frame.setVisible(true);
     }
 
-    public static int getDX(){
+    public static int getDX() {
         return dx;
+    }
+    public static boolean getIsRight(){
+        return isright;
     }
 
 }

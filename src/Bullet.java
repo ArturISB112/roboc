@@ -8,14 +8,17 @@ import java.awt.event.ActionListener;
 public class Bullet {
     int x;
     int y;
-    int i;
     boolean right;
     Timer timer = new Timer(20, new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (right) {
-                x += 11-Engine.getDX();
+                if (Engine.getIsRight()) {
+                    x += 11 - Engine.getDX();
+                } else x += 11 - Engine.getDX();
             } else {
-                x+= 11+Engine.getDX();
+                if (Engine.getIsRight()) {
+                    x -= 11 + Engine.getDX();
+                } else x -= 11 - Engine.getDX();
             }
         }
     });

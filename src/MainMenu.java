@@ -10,7 +10,6 @@ public class MainMenu extends JComponent {
 
     private Rectangle button = new Rectangle(50, 460, 120, 50);
     private Image img = getToolkit().getImage(getClass().getResource("startgameonmove.png"));
-    private Music musicmenu = new Music();
     public JFrame frame = new JFrame("Robocop v0.2");
 
     public MainMenu() {
@@ -18,10 +17,18 @@ public class MainMenu extends JComponent {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                startGame(e);
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                startGame(e);
+            }
+
+            private void startGame(MouseEvent e) {
                 if (button.contains(e.getX(), e.getY())) {
-                    musicmenu.Stop();
-                    final Music musicgame = new Music();
-                    musicgame.PlayGame();
+                    Music.getMusic().StopMenu();
+                    Music.getMusic().PlayGame();
                     frame.dispose();
                     try {
                         Engine.start();
@@ -34,7 +41,10 @@ public class MainMenu extends JComponent {
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                img = getToolkit().getImage(getClass().getResource("startgameonmove.png"));
+                if (button.contains(e.getX(), e.getY())) {
+                    img = getToolkit().getImage(getClass().getResource("startgameonclick.png"));
+                    repaint();
+                }
             }
         });
     }
@@ -54,7 +64,7 @@ public class MainMenu extends JComponent {
 
     public void start() {
       //  final Music musicmenu = new Music();
-        musicmenu.PlayMenu();
+        Music.getMusic().PlayMenu();
      //   final JFrame frame = new JFrame("Robocop");
         frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
         frame.add(this);

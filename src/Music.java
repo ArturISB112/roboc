@@ -6,19 +6,29 @@ import java.io.IOException;
  * Created by User on 10.11.2014.
  */
 public class Music {
-    private Clip clip = null;
-    private FloatControl volumeC = null;
-    private boolean playing = false;
+    private Clip menu = null;
+    private Clip music = null;
+    private Clip falling = null;
+    private Clip heroShoot = null;
+
+    private static final Music instance = new Music();
+
+    private Music() {
+    }
+
+    public static Music getMusic() {
+        return instance;
+    }
 
     public void PlayMenu() {
         try {
             File soundFile = new File("Robocop.wav");
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
-            clip = AudioSystem.getClip();
-            clip.open(ais);
-            clip.loop(clip.LOOP_CONTINUOUSLY);
-            clip.setFramePosition(0); //устанавливаем указатель на старт
-            clip.start(); //Поехали!!!
+            menu = AudioSystem.getClip();
+            menu.open(ais);
+            menu.loop(Clip.LOOP_CONTINUOUSLY);
+            menu.setFramePosition(0); //устанавливаем указатель на старт
+            menu.start(); //Поехали!!!
             //   Thread.sleep(clip.getMicrosecondLength()/1000);
             //    clip.stop(); //Останавливаем
             //     clip.close(); //Закрываем
@@ -30,20 +40,20 @@ public class Music {
             e.printStackTrace();
         }
     }
-    public void Stop(){
-        clip.stop();
-        clip.setFramePosition(0);
+    public void StopMenu(){
+        menu.stop();
+        menu.setFramePosition(0);
     }
     public void PlayGame() {
         try {
             File soundFile = new File("Robocopgame.wav");
 
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
-            clip = AudioSystem.getClip();
-            clip.open(ais);
-            clip.loop(clip.LOOP_CONTINUOUSLY);
-            clip.setFramePosition(0); //устанавливаем указатель на старт
-            clip.start(); //Поехали!!!
+            music = AudioSystem.getClip();
+            music.open(ais);
+            music.loop(Clip.LOOP_CONTINUOUSLY);
+            music.setFramePosition(0); //устанавливаем указатель на старт
+            music.start(); //Поехали!!!
             //   Thread.sleep(clip.getMicrosecondLength()/1000);
             //    clip.stop(); //Останавливаем
             //     clip.close(); //Закрываем
@@ -57,13 +67,15 @@ public class Music {
     }
     public void PlayFalling() {
         try {
-            File soundFile = new File("Fall.wav");
-            AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
-            clip = AudioSystem.getClip();
-            clip.open(ais);
-            clip.loop(0);
-            clip.setFramePosition(0); //устанавливаем указатель на старт
-            clip.start(); //Поехали!!!
+            if (falling == null) {
+                File soundFile = new File("Fall.wav");
+                AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
+                falling = AudioSystem.getClip();
+                falling.open(ais);
+                falling.loop(0);
+            }
+            falling.setFramePosition(0); //устанавливаем указатель на старт
+            falling.start(); //Поехали!!!
             //   Thread.sleep(clip.getMicrosecondLength()/1000);
             //    clip.stop(); //Останавливаем
             //     clip.close(); //Закрываем
@@ -77,13 +89,15 @@ public class Music {
     }
     public void PlayHeroShoot() {
         try {
-            File soundFile = new File("shoothero.wav");
-            AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
-            clip = AudioSystem.getClip();
-            clip.open(ais);
-            clip.loop(0);
-            clip.setFramePosition(0); //устанавливаем указатель на старт
-            clip.start(); //Поехали!!!
+            if (heroShoot == null) {
+                File soundFile = new File("shoothero.wav");
+                AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
+                heroShoot = AudioSystem.getClip();
+                heroShoot.open(ais);
+                heroShoot.loop(0);
+            }
+            heroShoot.setFramePosition(0); //устанавливаем указатель на старт
+            heroShoot.start(); //Поехали!!!
             //   Thread.sleep(clip.getMicrosecondLength()/1000);
             //    clip.stop(); //Останавливаем
             //     clip.close(); //Закрываем
