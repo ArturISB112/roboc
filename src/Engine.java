@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 public class Engine extends JComponent {
     /**
@@ -18,7 +19,8 @@ public class Engine extends JComponent {
     /**
      * Скорость движения (положительная - вправо, отрицательная - влево)
      */
-    private int HeroX, HeroY = 0;
+    private int HeroX, HeroY, EnemyY = 0;
+    private int screenWidth = 0;
     private static int dx = 0;
     private int sitmodelcount = 0;
     private int y = 0;
@@ -35,10 +37,15 @@ public class Engine extends JComponent {
     private Image modelStop, modelWalk, modelJump;
     private Image modelSittingDown1, modelSittingDown2, modelSittingDown3;
     private Image image;
+    private Image protivnik;
     private Image PatronHero;
     private boolean objFound = false;
     private ArrayList<Bullet> Bullets = new ArrayList<Bullet>();
     private ArrayList<EnvObj> objcts = new ArrayList<EnvObj>();
+    private ArrayList<Enemy> prtvnk = new ArrayList<Enemy>();
+    private Random random = new Random();
+    private int countUntilEnemy = 150 + random.nextInt(400 - 150);
+    private int WaitUntil = 0;
 
     public Engine() throws IOException {
 // Загружаем изображение из файла:
@@ -54,6 +61,7 @@ public class Engine extends JComponent {
         modelSittingDown2.getWidth(this);
         modelSittingDown3.getWidth(this);
         PatronHero = getToolkit().getImage(getClass().getResource("bullet.png"));
+        protivnik = getToolkit().getImage(getClass().getResource("enemy.png"));
         image = modelStop;
         EnvObj yashik1 = new EnvObj(2460, 0, 110, 70, "yashik");
         EnvObj yashik2 = new EnvObj(2560, 0, 180, 140, "yashik");
@@ -72,9 +80,18 @@ public class Engine extends JComponent {
         objcts.add(yashik7);
         objcts.add(yashik8);
         EnvObj doroga1 = new EnvObj(1505, 380, 1090, 1, "doroga");
-        EnvObj doroga2 = new EnvObj(4815,450,255,1,"doroga");
+        EnvObj doroga2 = new EnvObj(4815, 453, 255, 1, "doroga");
+        EnvObj doroga3 = new EnvObj(5175, 453, 1175, 1, "doroga");
+        EnvObj doroga4 = new EnvObj(6445, 453, 575, 1, "doroga");
+        EnvObj doroga5 = new EnvObj(7160, 453, 670, 1, "doroga");
+        EnvObj doroga6 = new EnvObj(9245, 380, 825, 1, "doroga");
+
         objcts.add(doroga1);
         objcts.add(doroga2);
+        objcts.add(doroga3);
+        objcts.add(doroga4);
+        objcts.add(doroga5);
+        objcts.add(doroga6);
 
 // Устанавливаем начальный размер компонента (высота - по высоте изображения)
         setPreferredSize(new Dimension(1100, background.getHeight()));
@@ -137,6 +154,14 @@ public class Engine extends JComponent {
         Timer timer = new Timer(20, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 // Изменяем текущие координаты
+                if (WaitUntil == countUntilEnemy) {
+                    Enemy enemy = new Enemy(screenWidth, EnemyY);
+                    prtvnk.add(enemy);
+                    WaitUntil = 0;
+                    Random random = new Random();
+                    countUntilEnemy = 150 + random.nextInt(400 - 150);
+                }
+                WaitUntil++;
                 if (reload >= 6) {
                     canfire = true;
                     reload = -1;
@@ -159,21 +184,22 @@ public class Engine extends JComponent {
                                 floor = d.height;
                             }
                         } else {
-                            if (x + dx >= d.x && x + dx < d.x + d.width && y >= d.y + d.height){
-                                objFound=true;
-                                floor=d.y+d.height;                            }
+                            if (x + dx >= d.x && x + dx < d.x + d.width && y >= d.y + d.height) {
+                                objFound = true;
+                                floor = d.y + d.height;
+                            }
                         }
                     }
                     x += dx;
-                    if (!(objFound)&&!(falling)) {
+                    if (!(objFound) && !(falling)) {
                         floor = 0;
                         if (y > floor && !jumping) {
                             falling = true;
-                            dy=-0.5;
+                            dy = -0.5;
                         }
                     } else if (floor < y && !jumping && !falling) {
                         falling = true;
-                        dy=-0.5;
+                        dy = -0.5;
                     }
                 }
                 if (sitdown) {
@@ -223,7 +249,7 @@ public class Engine extends JComponent {
      */
     private void drawBackground(Graphics g, int x) {
 // Определяем ширину экрана:
-        int screenWidth = getWidth();
+        screenWidth = getWidth();
 // Определяем ширину изображения:
         int imageWidth = background.getWidth();
 // x1 - координата, в которой нужно нарисовать самое левое изображение:
@@ -274,6 +300,7 @@ public class Engine extends JComponent {
         }
         HeroX = isright ? 50 : 190;
         HeroY = getHeight() - 265 - y;
+        EnemyY = getHeight() - 220 - floor;
         if (image == modelSittingDown3) {
             g.drawImage(image, HeroX, HeroY + 71, isright ? 124 : -124, 146, this);
         } else {
@@ -286,6 +313,11 @@ public class Engine extends JComponent {
                 //Bullets.remove(s);
                 i.remove();
             }
+        }
+
+        for (Enemy s : prtvnk) {
+            g.drawImage(protivnik, s.GetX(), s.GetY(), 91, 178, this);
+
         }
         for (Bullet s : Bullets) {
             g.drawImage(PatronHero, s.GetX(), s.GetY(), 22, 21, this);
