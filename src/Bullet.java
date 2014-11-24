@@ -13,9 +13,9 @@ public class Bullet {
     Timer timer = new Timer(20, new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (right) {
-                x += 11-Engine.getDX();
+                x += 12-Engine.getDX();
             } else {
-                x+= 11+Engine.getDX();
+                x+= 12+Engine.getDX();
             }
         }
     });

@@ -60,7 +60,7 @@ public class Engine extends JComponent {
                     dx = 5;
                     isright=true;
                 } else if (e.getKeyCode() == KeyEvent.VK_UP && !jumping) {
-                    dy =18.0;
+                    dy =18.2;
                     jumping = true;
                 } else if (e.getKeyCode() == KeyEvent.VK_CONTROL && canfire) {
                     canfire=false;
@@ -99,11 +99,11 @@ public class Engine extends JComponent {
         Timer timer = new Timer(20, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 // Изменяем текущие координаты
-                if (reload>=4){
+                if (reload>=5){
                     canfire=true;
                     reload=-1;
                 }
-                if (reload>=0 && reload<=5){
+                if (reload>=0 && reload<=6){
                     reload++;
                 }
                 if (dx < 0 && x < 5 || sitdown == true) {
