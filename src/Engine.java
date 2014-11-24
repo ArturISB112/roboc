@@ -18,7 +18,7 @@ public class Engine extends JComponent {
      * Скорость движения (положительная - вправо, отрицательная - влево)
      */
     private int HeroX, HeroY = 0;
-    private int dx = 0;
+    private static int dx = 0;
     private int sitmodelcount = 0;
     private int y = 0;
     private double dy = 0;
@@ -67,10 +67,10 @@ public class Engine extends JComponent {
                     Music shoot = new Music();
                     shoot.PlayHeroShoot();
                     if (isright) {
-                        Bullet a = new Bullet(HeroX + 150, HeroY + 63, isright);
+                        Bullet a = new Bullet(HeroX + 145, HeroY + 63, isright);
                         Bullets.add(a);
                     } else {
-                        Bullet a = new Bullet(HeroX-150, HeroY + 63, isright);
+                        Bullet a = new Bullet(HeroX-152, HeroY + 63, isright);
                         Bullets.add(a);
                     }
                 } else if (e.getKeyCode() == KeyEvent.VK_DOWN && !sitdown && !jumping) {
@@ -202,11 +202,11 @@ public class Engine extends JComponent {
         HeroY=getHeight() - 265 - y;
          g.drawImage(image, HeroX, HeroY, isright ? 150 : -150, 225, this);
         g.setColor(Color.white);
-        for (Bullet s:Bullets){
+     /*   for (Bullet s:Bullets){
             if (s.GetX()>screenWidth+15){
                 Bullets.remove(s);
             }
-        }
+        } */
         for (Bullet s: Bullets){
          g.drawImage(PatronHero,s.GetX(),s.GetY(),22,21,this);
 
@@ -215,7 +215,8 @@ public class Engine extends JComponent {
         g.setColor(Color.red);
         g.fillRect(screenWidth-300,20,230,45);
         g.setColor(Color.yellow);
-        g.drawString("100%",screenWidth-220,45);
+        g.drawString("100%",screenWidth-200,45);
+        g.drawString(String.valueOf(x), 50,50);
     }
 
 
@@ -240,6 +241,11 @@ public class Engine extends JComponent {
 // Показываем окно на экране
         frame.setVisible(true);
     }
+
+    public static int getDX(){
+        return dx;
+    }
+
 }
 
 
