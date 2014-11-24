@@ -13,12 +13,12 @@ public class Bullet {
         public void actionPerformed(ActionEvent e) {
             if (right) {
                 if (Engine.getIsRight()) {
-                    x += 11 - Engine.getDX();
-                } else x += 11 - Engine.getDX();
+                    x += 16 - Engine.getDX();
+                } else x += 16 - Engine.getDX();
             } else {
                 if (Engine.getIsRight()) {
-                    x -= 11 + Engine.getDX();
-                } else x -= 11 - Engine.getDX();
+                    x -= 16 + Engine.getDX();
+                } else x -= 16 - Engine.getDX();
             }
         }
     });
