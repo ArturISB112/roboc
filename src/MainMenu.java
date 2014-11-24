@@ -9,7 +9,7 @@ import java.io.IOException;
 public class MainMenu extends JComponent {
 
     private Rectangle button = new Rectangle(50, 460, 120, 50);
-    private Image img = getToolkit().getImage(getClass().getResource("startgameonmove.png"));
+    private Image img = getToolkit().getImage(getClass().getResource("startgame.png"));
     public JFrame frame = new JFrame("Robocop v0.2");
 
     public MainMenu() {
@@ -17,17 +17,23 @@ public class MainMenu extends JComponent {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                img = getToolkit().getImage(getClass().getResource("startgameonclick.png"));
+                repaint();
                 startGame(e);
             }
 
             @Override
             public void mouseDragged(MouseEvent e) {
+                img = getToolkit().getImage(getClass().getResource("startgameonclick.png"));
+                repaint();
                 startGame(e);
             }
 
             private void startGame(MouseEvent e) {
                 if (button.contains(e.getX(), e.getY())) {
                     Music.getMusic().StopMenu();
+                    img = getToolkit().getImage(getClass().getResource("startgameonclick.png"));
+                    repaint();
                     Music.getMusic().PlayGame();
                     frame.dispose();
                     try {
@@ -42,7 +48,10 @@ public class MainMenu extends JComponent {
             @Override
             public void mouseMoved(MouseEvent e) {
                 if (button.contains(e.getX(), e.getY())) {
-                    img = getToolkit().getImage(getClass().getResource("startgameonclick.png"));
+                    img = getToolkit().getImage(getClass().getResource("startgameonmove.png"));
+                    repaint();
+                } else {
+                    img = getToolkit().getImage(getClass().getResource("startgame.png"));
                     repaint();
                 }
             }

@@ -51,7 +51,7 @@ public class Engine extends JComponent {
         modelSittingDown3.getWidth(this);
         PatronHero = getToolkit().getImage(getClass().getResource("bullet.png"));
         image = modelStop;
-        EnvObj pregrada = new EnvObj(440,30,20,30);
+        EnvObj pregrada = new EnvObj(2450,30,20,30);
         objcts.add(pregrada);
 // Устанавливаем начальный размер компонента (высота - по высоте изображения)
         setPreferredSize(new Dimension(1100, background.getHeight()));
