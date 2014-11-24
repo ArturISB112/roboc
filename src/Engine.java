@@ -165,13 +165,15 @@ public class Engine extends JComponent {
                         }
                     }
                     x += dx;
-                    if (!(objFound)) {
+                    if (!(objFound)&&!(falling)) {
                         floor = 0;
                         if (y > floor && !jumping) {
                             falling = true;
+                            dy=-0.5;
                         }
-                    } else if (floor < y && !jumping) {
+                    } else if (floor < y && !jumping && !falling) {
                         falling = true;
+                        dy=-0.5;
                     }
                 }
                 if (sitdown) {
