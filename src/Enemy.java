@@ -9,6 +9,7 @@ public class Enemy {
     int x;
     int y;
     boolean right;
+    int hp=100;
     public Enemy(int x,int y){
         this.x=x;
         this.y=y;
@@ -17,7 +18,7 @@ public class Enemy {
     }
     Timer timer = new Timer(20, new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            x-=6 + Engine.getDX();
+          x-=5; //+ Engine.getDX();
         }
     });
     public int GetX(){
@@ -26,5 +27,11 @@ public class Enemy {
     public int GetY(){
         return y;
     }
+    public void decHP(){
+        hp -=25;
 
+    }
+    public int GetHP(){
+        return hp;
+    }
 }
