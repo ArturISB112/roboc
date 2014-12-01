@@ -8,8 +8,10 @@ import java.awt.event.ActionListener;
 public class Enemy {
     int x;
     int y;
+    int dy=-13;
     boolean right;
     int hp=100;
+    boolean iskilled = false;
     public Enemy(int x,int y){
         this.x=x;
         this.y=y;
@@ -18,7 +20,13 @@ public class Enemy {
     }
     Timer timer = new Timer(20, new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          x-=5; //+ Engine.getDX();
+          if (!iskilled){
+              x-=5; //+ Engine.getDX();
+          } else {
+              x+=31;
+              y+=dy;
+              dy+=1;
+          }
         }
     });
     public int GetX(){
@@ -28,10 +36,13 @@ public class Enemy {
         return y;
     }
     public void decHP(){
-        hp -=25;
+        hp -=50;
 
     }
     public int GetHP(){
         return hp;
+    }
+    public void kill(){
+            iskilled = true;
     }
 }

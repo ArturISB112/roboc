@@ -39,6 +39,7 @@ public class Engine extends JComponent {
     private Image image;
     private Image protivnik;
     private Image PatronHero;
+    private Image EnemyDown;
     private boolean objFound = false;
     private ArrayList<Bullet> Bullets = new ArrayList<Bullet>();
     private ArrayList<EnvObj> objcts = new ArrayList<EnvObj>();
@@ -57,6 +58,7 @@ public class Engine extends JComponent {
         modelSittingDown1 = getToolkit().getImage(getClass().getResource("sittingdown1.png"));
         modelSittingDown2 = getToolkit().getImage(getClass().getResource("sittingdown2.png"));
         modelSittingDown3 = getToolkit().getImage(getClass().getResource("sittingdown3.png"));
+        EnemyDown = getToolkit().getImage(getClass().getResource("enemydown.png"));
         modelSittingDown1.getWidth(this);
         modelSittingDown2.getWidth(this);
         modelSittingDown3.getWidth(this);
@@ -300,7 +302,7 @@ public class Engine extends JComponent {
         }
         HeroX = x + 50;
         HeroY = getHeight() - 265 - y;
-        EnemyY = getHeight() - 220 - floor;
+        EnemyY = getHeight() - 220;
         if (image == modelSittingDown3) {
             g.drawImage(image, HeroX-x+(isright ? 0 : 140), HeroY + 71, isright ? 124 : -124, 146, this);
         } else {
@@ -318,19 +320,24 @@ public class Engine extends JComponent {
         for (Iterator<Enemy> i = prtvnk.iterator(); i.hasNext(); ) {
             Enemy s = i.next();
             g.drawString("Enemy x=" + String.valueOf(s.GetX()), 50, 150);
-            if (s.GetX()-x +100< 0 || s.GetHP()<=0) {
-                //Bullets.remove(s);
+            if (s.GetX()-x +100< 0 || s.GetX()-x>screenWidth+20) {
                 i.remove();
+            }
+            if (s.GetHP()<=0) {
+                //Bullets.remove(s);
+                s.kill();
             }
         }
 
         for (Enemy s : prtvnk) {
-            g.drawImage(protivnik, s.GetX()-x, s.GetY(), 91, 178, this);
+            if (!s.iskilled) {
+                    g.drawImage(protivnik, s.GetX() - x, s.GetY(), 91, 178, this);
+            } else g.drawImage(EnemyDown, s.GetX() - x, s.GetY(), 80, 185, this);
             for (Iterator<Bullet> i = Bullets.iterator(); i.hasNext(); ) {
                 Bullet b = i.next();
                 g.drawString("Bullet x" + String.valueOf(b.GetX()), 50, 125);
                 g.drawString("Enemy x=" + String.valueOf(s.GetX()), 50, 150);
-                if (b.GetX() > s.GetX() && b.GetX()<s.GetX()+91) {
+                if (b.GetX() > s.GetX() && b.GetX()<s.GetX()+91 && b.GetY()>=s.GetY() && b.GetY() <= s.GetY()+91) {
                     //Bullets.remove(s);
                     s.decHP();
                     i.remove();
