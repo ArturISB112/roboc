@@ -9,7 +9,10 @@ public class Enemy {
     int x;
     int y;
     int dy=-13;
+    int count=0;
     boolean right;
+    boolean shoot=false;
+    boolean canshoot=true;
     int hp=100;
     boolean iskilled = false;
     public Enemy(int x,int y){
@@ -20,8 +23,20 @@ public class Enemy {
     }
     Timer timer = new Timer(20, new ActionListener() {
         public void actionPerformed(ActionEvent e) {
+          if (Engine.isGameover() || Engine.isWin()){
+                timer.stop();
+            }
           if (!iskilled){
-              x-=5; //+ Engine.getDX();
+              if (!shoot) {
+                  x -= 5; //+ Engine.getDX();
+              }
+              if (!canshoot){
+                  count++;
+                  if (count>120){
+                      canshoot=true;
+                      count=0;
+                  }
+              }
           } else {
               x+=31;
               y+=dy;
@@ -44,5 +59,15 @@ public class Enemy {
     }
     public void kill(){
             iskilled = true;
+    }
+    public void shoot(){
+        shoot=true;
+        canshoot=false;
+    }
+    public void  run(){
+        shoot=false;
+    }
+    public boolean getCanshoot(){
+        return canshoot;
     }
 }

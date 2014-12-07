@@ -10,6 +10,8 @@ public class Music {
     private Clip music = null;
     private Clip falling = null;
     private Clip heroShoot = null;
+    private Clip enemyshoot = null;
+    private Clip enemypopal = null;
 
     private static final Music instance = new Music();
 
@@ -40,10 +42,12 @@ public class Music {
             e.printStackTrace();
         }
     }
-    public void StopMenu(){
+
+    public void StopMenu() {
         menu.stop();
         menu.setFramePosition(0);
     }
+
     public void PlayGame() {
         try {
             File soundFile = new File("Robocopgame.wav");
@@ -65,6 +69,82 @@ public class Music {
             e.printStackTrace();
         }
     }
+
+    public void StopGame() {
+        music.stop();
+        music.setFramePosition(0);
+    }
+
+    public void EnemyPopal() {
+        try {
+            if (enemypopal == null) {
+                File soundFile = new File("enemypopal.wav");
+                AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
+                enemypopal = AudioSystem.getClip();
+                enemypopal.open(ais);
+                enemypopal.loop(0);
+            }
+            enemypopal.setFramePosition(0); //устанавливаем указатель на старт
+            enemypopal.start(); //Поехали!!!
+            //   Thread.sleep(clip.getMicrosecondLength()/1000);
+            //    clip.stop(); //Останавливаем
+            //     clip.close(); //Закрываем
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void EnemyShoot() {
+        try {
+            if (enemyshoot == null) {
+                File soundFile = new File("enemyshoot.wav");
+                AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
+                enemyshoot = AudioSystem.getClip();
+                enemyshoot.open(ais);
+                enemyshoot.loop(0);
+            }
+            enemyshoot.setFramePosition(0); //устанавливаем указатель на старт
+            enemyshoot.start(); //Поехали!!!
+            //   Thread.sleep(clip.getMicrosecondLength()/1000);
+            //    clip.stop(); //Останавливаем
+            //     clip.close(); //Закрываем
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void PlayWin() {
+        try {
+            File soundFile = new File("win.wav");
+
+            AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
+            music = AudioSystem.getClip();
+            music.open(ais);
+            music.loop(Clip.LOOP_CONTINUOUSLY);
+            music.setFramePosition(0); //устанавливаем указатель на старт
+            music.start(); //Поехали!!!
+            //   Thread.sleep(clip.getMicrosecondLength()/1000);
+            //    clip.stop(); //Останавливаем
+            //     clip.close(); //Закрываем
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void PlayFalling() {
         try {
             if (falling == null) {
@@ -87,6 +167,7 @@ public class Music {
             e.printStackTrace();
         }
     }
+
     public void PlayHeroShoot() {
         try {
             if (heroShoot == null) {
@@ -98,6 +179,28 @@ public class Music {
             }
             heroShoot.setFramePosition(0); //устанавливаем указатель на старт
             heroShoot.start(); //Поехали!!!
+            //   Thread.sleep(clip.getMicrosecondLength()/1000);
+            //    clip.stop(); //Останавливаем
+            //     clip.close(); //Закрываем
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void PlayGameOver() {
+        try {
+            File soundFile = new File("gameover.wav");
+
+            AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
+            music = AudioSystem.getClip();
+            music.open(ais);
+            music.loop(Clip.LOOP_CONTINUOUSLY);
+            music.setFramePosition(0); //устанавливаем указатель на старт
+            music.start(); //Поехали!!!
             //   Thread.sleep(clip.getMicrosecondLength()/1000);
             //    clip.stop(); //Останавливаем
             //     clip.close(); //Закрываем
