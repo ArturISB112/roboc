@@ -189,7 +189,7 @@ public class Engine extends JComponent {
                 if (reload >= 0 && reload <= 7) {
                     reload++;
                 }
-                if ((dx < 0 && x < 5) || sitdown == true || (dx > 0 && x >= 10555)) {
+                if ((dx < 0 && x < 5) || sitdown || (dx > 0 && x >= 10555)) {
                     dx = 0;
                 } else {
                     objFound = false;
