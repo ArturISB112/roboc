@@ -161,7 +161,7 @@ public class Engine extends JComponent {
             }
         });
 // Таймер будет срабатывать каждые 20 миллисекунд (50 раз в секунду)
-        timer = new Timer(20, new ActionListener() {
+        timer = new Timer(15, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (gameover){
                     Music.getMusic().StopGame();
@@ -346,7 +346,7 @@ public class Engine extends JComponent {
                 s.kill();
             }
         }
-
+        int enemycount=0;
         for (Enemy s : prtvnk) {
             if (!s.iskilled) {
                 if (s.GetX() - HeroX < 650) {
@@ -362,6 +362,7 @@ public class Engine extends JComponent {
                     s.run();
                     g.drawImage(protivnik, s.GetX() - x, s.GetY(), 91, 178, this);
                 }
+                enemycount++;
             } else g.drawImage(EnemyDown, s.GetX() - x, s.GetY(), 80, 185, this);
             for (Iterator<Bullet> i = Bullets.iterator(); i.hasNext(); ) {
                 Bullet b = i.next();
@@ -400,7 +401,7 @@ public class Engine extends JComponent {
                 }
             }
         }
-        if (x >= 10550){
+        if (x >= 10550 && enemycount==0 ){
             win=true;
         }
 
