@@ -188,7 +188,7 @@ public class Engine extends JComponent {
                     boolean objfound = false;
                     boolean created = false;
                     for (EnvObj d : objcts) {
-                        if ((x + screenWidth > d.x && x + screenWidth < d.x + d.width + 350) && d.tip.equals(("yashik"))) {
+                        if ((x + screenWidth -50 > d.x && x + screenWidth < d.x + d.width + 350) && d.tip.equals(("yashik"))) {
                             objfound = true;
                         }
                         if (!objfound && !created) {
