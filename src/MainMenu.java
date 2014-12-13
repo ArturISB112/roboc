@@ -63,8 +63,6 @@ public class MainMenu extends JComponent {
     protected void paintComponent(Graphics g) {
         int width = getWidth();
         int height = getHeight();
-        int centerX = width / 2;
-        int centerY = height / 2;
         Image image = getToolkit().getImage(getClass().getResource("Robocop3.jpg"));
         g.drawImage(image, 0, 0, width, height, this);
         g.setColor(Color.red);
