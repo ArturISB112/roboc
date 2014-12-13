@@ -7,12 +7,13 @@ public class EnvObj {
     int width;
     int height;
     String tip;
-    public EnvObj(int x,int y, int width, int height, String tip) {
+
+    public EnvObj(int x, int y, int width, int height, String tip) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.tip=tip;
+        this.tip = tip;
     } // объект окружающей среды
 
 }

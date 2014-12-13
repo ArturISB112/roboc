@@ -78,17 +78,17 @@ public class Music {
                 enemypopal.open(ais);
                 enemypopal.loop(0); // потвтор 1 раз
             }
-                enemypopal.setFramePosition(0); //устанавливаем указатель на старт
-                enemypopal.start(); //Поехали!!!
-            }catch(UnsupportedAudioFileException e){
-                e.printStackTrace();
-            }catch(LineUnavailableException e){
-                e.printStackTrace();
-            }catch(IOException e){
-                e.printStackTrace();
-            }
-
+            enemypopal.setFramePosition(0); //устанавливаем указатель на старт
+            enemypopal.start(); //Поехали!!!
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+    }
 
     public void EnemyShoot() {
         try {

@@ -68,8 +68,8 @@ public class MainMenu extends JComponent {
         Image image = getToolkit().getImage(getClass().getResource("Robocop3.jpg"));
         g.drawImage(image, 0, 0, width, height, this);
         g.setColor(Color.red);
-       // Image img = getToolkit().getImage(getClass().getResource("startgame.png"));
-        g.drawImage(img, 50, 440, 150,60, this);
+        // Image img = getToolkit().getImage(getClass().getResource("startgame.png"));
+        g.drawImage(img, 50, 440, 150, 60, this);
     }
 
     public void start() {

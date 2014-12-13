@@ -8,30 +8,31 @@ import java.awt.event.ActionListener;
 public class EnemyBullet {
     int x;
     int y;
-    int count=0;
+    int count = 0;
     boolean right;
     Timer timer = new Timer(20, new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if (Engine.isGameover() || Engine.isWin()){
+            if (Engine.isGameover() || Engine.isWin()) {
                 timer.stop();
             } // если выйграл или проиграл, то стоп
-                if (Engine.getIsRight()) {
-                    x -= 20 + Engine.getDX();
-                } else x -= 20 - Engine.getDX();
-            }
+            if (Engine.getIsRight()) {
+                x -= 20 + Engine.getDX();
+            } else x -= 20 - Engine.getDX();
+        }
     });
 
-    public EnemyBullet(int x,int y){
-        this.x=x;
-        this.y=y;
-        this.right=right;
+    public EnemyBullet(int x, int y) {
+        this.x = x;
+        this.y = y;
+        this.right = right;
         timer.start();
     }
 
-    public int GetX(){
+    public int GetX() {
         return x;
     }
-    public int GetY(){
+
+    public int GetY() {
         return y;
     }
 

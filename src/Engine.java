@@ -188,13 +188,13 @@ public class Engine extends JComponent {
                     boolean objfound = false;
                     boolean created = false;
                     for (EnvObj d : objcts) {
-                        if ((x + screenWidth > d.x && x + screenWidth < d.x + d.width+350) && d.tip.equals(("yashik"))) {
+                        if ((x + screenWidth > d.x && x + screenWidth < d.x + d.width + 350) && d.tip.equals(("yashik"))) {
                             objfound = true;
                         }
                         if (!objfound && !created) {
                             Enemy enemy = new Enemy(x + screenWidth + 20, EnemyY);
                             prtvnk.add(enemy);
-                            created=true;
+                            created = true;
                             WaitUntil = 0;
                             Random random = new Random();
                             countUntilEnemy = 150 + random.nextInt(150);
@@ -380,7 +380,7 @@ public class Engine extends JComponent {
                 }
             }
             if (!s.iskilled) {
-                if (s.GetX() - HeroX < 650 && HeroY + 300 > s.GetY()||objenemyfound) {
+                if (s.GetX() - HeroX < 650 && HeroY + 300 > s.GetY() || objenemyfound) {
                     s.setStop();
                     if (s.getCanshoot()) {
                         s.shoot();
@@ -407,7 +407,7 @@ public class Engine extends JComponent {
             } //если патрон попадает в противника, то патрон удаляется и хп снижается
 
         }
-        for (Bullet b:Bullets) {
+        for (Bullet b : Bullets) {
             g.drawImage(PatronHero, b.GetX() - x, b.GetY(), 22, 21, this);
         } //прорисовываем все патроны
         for (Iterator<EnemyBullet> i = EnemyBulls.iterator(); i.hasNext(); ) {
