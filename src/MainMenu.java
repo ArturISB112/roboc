@@ -7,7 +7,7 @@ import java.io.IOException;
  * Created by User on 10.11.2014.
  */
 public class MainMenu extends JComponent {
-    private Rectangle button = new Rectangle(50, 460, 120, 50); // создаем кликабельную зону, где будет наша кнопка старта
+    private Rectangle button = new Rectangle(50, 440,150,60); // создаем кликабельную зону, где будет наша кнопка старта
     private Image img = getToolkit().getImage(getClass().getResource("startgame.png")); // загрузка фона
     public JFrame frame = new JFrame("Robocop v0.2"); // создание фрейма
 
