@@ -13,6 +13,7 @@ public class Enemy {
     boolean right;
     boolean shoot=false;
     boolean canshoot=true;
+    boolean stop=false;
     int hp=100;
     boolean iskilled = false;
     public Enemy(int x,int y){
@@ -25,18 +26,18 @@ public class Enemy {
         public void actionPerformed(ActionEvent e) {
           if (Engine.isGameover() || Engine.isWin()){
                 timer.stop();
-            }
+            } // есди выйграл или проиграл, остановить таймер
           if (!iskilled){
-              if (!shoot) {
+              if (!shoot && !stop) {
                   x -= 5; //+ Engine.getDX();
-              }
+              } // если противник не убит, не стреляет и не стоит, то изменять координаты
               if (!canshoot){
                   count++;
                   if (count>120){
                       canshoot=true;
                       count=0;
                   }
-              }
+              } // если не может стрелять, то ждать
           } else {
               x+=31;
               y+=dy;
@@ -53,7 +54,7 @@ public class Enemy {
     public void decHP(){
         hp -=50;
 
-    }
+    } // уменьшение хп при попадании
     public int GetHP(){
         return hp;
     }
@@ -63,11 +64,16 @@ public class Enemy {
     public void shoot(){
         shoot=true;
         canshoot=false;
+        stop=true;
     }
     public void  run(){
         shoot=false;
+        stop=false;
     }
     public boolean getCanshoot(){
         return canshoot;
+    }
+    public void setStop(){
+        stop=true;
     }
 }

@@ -1,11 +1,9 @@
-/**
- * Created by User on 10.11.2014.
- */
+//Класс, с которого начинается вся игра
 public class Game {
     public static void main(String[] args) {
 
-        MainMenu menu = new MainMenu();
-        menu.start();
+        MainMenu menu = new MainMenu(); //создание класса Главного меню
+        menu.start(); // запустить главное меню
 
     }
 }

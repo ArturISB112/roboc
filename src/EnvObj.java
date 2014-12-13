@@ -13,6 +13,6 @@ public class EnvObj {
         this.width = width;
         this.height = height;
         this.tip=tip;
-    }
+    } // объект окружающей среды
 
 }

@@ -28,12 +28,9 @@ public class Music {
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
             menu = AudioSystem.getClip();
             menu.open(ais);
-            menu.loop(Clip.LOOP_CONTINUOUSLY);
+            menu.loop(Clip.LOOP_CONTINUOUSLY); // бесокнечное зацикливание
             menu.setFramePosition(0); //устанавливаем указатель на старт
-            menu.start(); //Поехали!!!
-            //   Thread.sleep(clip.getMicrosecondLength()/1000);
-            //    clip.stop(); //Останавливаем
-            //     clip.close(); //Закрываем
+            menu.start(); //начинаем воспроизведение музыки
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         } catch (LineUnavailableException e) {
@@ -58,9 +55,6 @@ public class Music {
             music.loop(Clip.LOOP_CONTINUOUSLY);
             music.setFramePosition(0); //устанавливаем указатель на старт
             music.start(); //Поехали!!!
-            //   Thread.sleep(clip.getMicrosecondLength()/1000);
-            //    clip.stop(); //Останавливаем
-            //     clip.close(); //Закрываем
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         } catch (LineUnavailableException e) {
@@ -82,22 +76,19 @@ public class Music {
                 AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
                 enemypopal = AudioSystem.getClip();
                 enemypopal.open(ais);
-                enemypopal.loop(0);
+                enemypopal.loop(0); // потвтор 1 раз
             }
-            enemypopal.setFramePosition(0); //устанавливаем указатель на старт
-            enemypopal.start(); //Поехали!!!
-            //   Thread.sleep(clip.getMicrosecondLength()/1000);
-            //    clip.stop(); //Останавливаем
-            //     clip.close(); //Закрываем
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                enemypopal.setFramePosition(0); //устанавливаем указатель на старт
+                enemypopal.start(); //Поехали!!!
+            }catch(UnsupportedAudioFileException e){
+                e.printStackTrace();
+            }catch(LineUnavailableException e){
+                e.printStackTrace();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
 
-    }
+        }
 
     public void EnemyShoot() {
         try {
@@ -110,9 +101,6 @@ public class Music {
             }
             enemyshoot.setFramePosition(0); //устанавливаем указатель на старт
             enemyshoot.start(); //Поехали!!!
-            //   Thread.sleep(clip.getMicrosecondLength()/1000);
-            //    clip.stop(); //Останавливаем
-            //     clip.close(); //Закрываем
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         } catch (LineUnavailableException e) {
@@ -133,9 +121,6 @@ public class Music {
             music.loop(Clip.LOOP_CONTINUOUSLY);
             music.setFramePosition(0); //устанавливаем указатель на старт
             music.start(); //Поехали!!!
-            //   Thread.sleep(clip.getMicrosecondLength()/1000);
-            //    clip.stop(); //Останавливаем
-            //     clip.close(); //Закрываем
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         } catch (LineUnavailableException e) {
@@ -156,9 +141,6 @@ public class Music {
             }
             falling.setFramePosition(0); //устанавливаем указатель на старт
             falling.start(); //Поехали!!!
-            //   Thread.sleep(clip.getMicrosecondLength()/1000);
-            //    clip.stop(); //Останавливаем
-            //     clip.close(); //Закрываем
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         } catch (LineUnavailableException e) {
@@ -179,9 +161,6 @@ public class Music {
             }
             heroShoot.setFramePosition(0); //устанавливаем указатель на старт
             heroShoot.start(); //Поехали!!!
-            //   Thread.sleep(clip.getMicrosecondLength()/1000);
-            //    clip.stop(); //Останавливаем
-            //     clip.close(); //Закрываем
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         } catch (LineUnavailableException e) {
@@ -201,9 +180,6 @@ public class Music {
             music.loop(Clip.LOOP_CONTINUOUSLY);
             music.setFramePosition(0); //устанавливаем указатель на старт
             music.start(); //Поехали!!!
-            //   Thread.sleep(clip.getMicrosecondLength()/1000);
-            //    clip.stop(); //Останавливаем
-            //     clip.close(); //Закрываем
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         } catch (LineUnavailableException e) {

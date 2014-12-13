@@ -7,27 +7,26 @@ import java.io.IOException;
  * Created by User on 10.11.2014.
  */
 public class MainMenu extends JComponent {
-
-    private Rectangle button = new Rectangle(50, 460, 120, 50);
-    private Image img = getToolkit().getImage(getClass().getResource("startgame.png"));
-    public JFrame frame = new JFrame("Robocop v0.2");
+    private Rectangle button = new Rectangle(50, 460, 120, 50); // создаем кликабельную зону, где будет наша кнопка старта
+    private Image img = getToolkit().getImage(getClass().getResource("startgame.png")); // загрузка фона
+    public JFrame frame = new JFrame("Robocop v0.2"); // создание фрейма
 
     public MainMenu() {
-        setPreferredSize(new Dimension(800, 600));
-        addMouseListener(new MouseAdapter() {
+        setPreferredSize(new Dimension(800, 600)); //задаем разрешение
+        addMouseListener(new MouseAdapter() { //задаем слушателя
             @Override
             public void mouseClicked(MouseEvent e) {
                 img = getToolkit().getImage(getClass().getResource("startgameonclick.png"));
                 repaint();
                 startGame(e);
-            }
+            } //если мышь нажата, загрузить картинку нажатой кнопки, перерисовать форму и начать игру
 
             @Override
             public void mouseDragged(MouseEvent e) {
                 img = getToolkit().getImage(getClass().getResource("startgameonclick.png"));
                 repaint();
                 startGame(e);
-            }
+            } //если мышь нажата со сдвигом, загрузить картинку нажатой кнопки, перерисовать форму и начать игру
 
             private void startGame(MouseEvent e) {
                 if (button.contains(e.getX(), e.getY())) {
@@ -43,6 +42,7 @@ public class MainMenu extends JComponent {
                     }
                 }
             }
+            // если мышь нажата в нужных коордмнатах, то остановить музыку меню, изменить картинку кнопки, перерисовать, убрать текущий фрейм и начать игру.
         });
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
@@ -54,6 +54,7 @@ public class MainMenu extends JComponent {
                     img = getToolkit().getImage(getClass().getResource("startgame.png"));
                     repaint();
                 }
+                // перерисовка кнопки в зависимости от того, где курсор
             }
         });
     }
@@ -72,16 +73,14 @@ public class MainMenu extends JComponent {
     }
 
     public void start() {
-      //  final Music musicmenu = new Music();
         Music.getMusic().PlayMenu();
-     //   final JFrame frame = new JFrame("Robocop");
-        frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE); //установить де    ствие при закрытии по умолчанию
         frame.add(this);
         frame.pack();
-        frame.setResizable(false);
+        frame.setResizable(false); //нельзя изменять размер
         frame.setLocationRelativeTo(null);
-        frame.setLayout(null);
-        frame.setVisible(true);
+        frame.setLayout(null); // не задаем лейаутов
+        frame.setVisible(true); //фрейм видимый
     }
 }
 

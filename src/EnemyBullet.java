@@ -14,7 +14,7 @@ public class EnemyBullet {
         public void actionPerformed(ActionEvent e) {
             if (Engine.isGameover() || Engine.isWin()){
                 timer.stop();
-            }
+            } // если выйграл или проиграл, то стоп
                 if (Engine.getIsRight()) {
                     x -= 20 + Engine.getDX();
                 } else x -= 20 - Engine.getDX();
