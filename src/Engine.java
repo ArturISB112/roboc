@@ -12,13 +12,8 @@ import java.util.Iterator;
 import java.util.Random;
 
 public class Engine extends JComponent {
-    /**
-     * Текущая координата
-     */
-    private int x = 0;
-    /**
-     * Скорость движения (положительная - вправо, отрицательная - влево)
-     */
+    private int x = 0;//Текущая координата
+     // Скорость движения (положительная - вправо, отрицательная - влево)
     private int HeroX, HeroY, EnemyY = 0; //координаты героя х и у, противника y
     private int screenWidth = 0; // ширина экрана
     private static int dx = 0; // смещение
