@@ -26,6 +26,7 @@ public class Engine extends JComponent {
     private int HP = 100; // количество здоровья
     private int y = 0; //координата смещения y
     private static boolean gameover, win = false; // проиграл ли выйграл
+    private int enemycount=0;
     private int floor = 0; // уровень пола
     private double dy = 0; //смещение по y
     private boolean jumping = false; // прыгаем ли
@@ -169,8 +170,8 @@ public class Engine extends JComponent {
             }
         });
         //при отпускании кнопки прекращается движение
-// Таймер будет срабатывать каждые 15 миллисекунд
-        timer = new Timer(15, new ActionListener() {
+// Таймер будет срабатывать каждые 16 миллисекунд
+        timer = new Timer(16, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (gameover) {
                     Music.getMusic().StopGame();
@@ -188,7 +189,7 @@ public class Engine extends JComponent {
                     boolean objfound = false;
                     boolean created = false;
                     for (EnvObj d : objcts) {
-                        if ((x + screenWidth -60 > d.x && x + screenWidth < d.x + d.width + 350) && d.tip.equals(("yashik"))) {
+                        if ((x + screenWidth - 60 > d.x && x + screenWidth < d.x + d.width + 350) && d.tip.equals(("yashik"))) {
                             objfound = true;
                         }
                         if (!objfound && !created) {
@@ -278,10 +279,93 @@ public class Engine extends JComponent {
                     }
                 } // физика падения
 
-// Перерисовываем картинку
+                if (sitdown && !jumping) {
+                    switch (sitmodelcount) {
+                        case 1:
+                            image = modelSittingDown1;
+                            break;
+                        case 2:
+                            image = modelSittingDown2;
+                            break;
+                        case 3:
+                            image = modelSittingDown3;
+                            break;
+                    } //определяем, какая картинка должна быть загружена когда садимся
+                } else if (situp) {
+                    switch (sitmodelcount) {
+                        case 0:
+                            image = modelStop;
+                            break;
+                        case 1:
+                            image = modelSittingDown1;
+                            break;
+                        case 2:
+                            image = modelSittingDown2;
+                            break;
+                        case 3:
+                            image = modelSittingDown3;
+                            situp = false;
+                            break;
+                    } //определяем, какая картинка должна быть загружена когда встаем
+
+                } else if (jumping || falling) {
+                    image = modelJump;
+                } else {
+                    image = dx != 0 ? modelWalk : modelStop;
+                }
+                HeroX = x + 50;
+                HeroY = getHeight() - 265 - y;
+                EnemyY = getHeight() - 220;
+                // Перерисовываем картинку
+                for (Iterator<Bullet> i = Bullets.iterator(); i.hasNext(); ) {
+                    Bullet s = i.next();
+                    if (s.GetX() - x > screenWidth + 15 || s.GetX() - x < -20) {
+
+                        //Bullets.remove(s);
+                        i.remove();
+                    }
+                } // если патрон уходит за пределы экрана, удаляем его
+                for (Iterator<Enemy> i = prtvnk.iterator(); i.hasNext(); ) {
+                    Enemy s = i.next();
+                    if (s.GetX() - x + 100 < 0 || s.GetX() - x > screenWidth + 20) {
+                        i.remove();
+                    }
+                    if (s.GetHP() <= 0) {
+                        //Bullets.remove(s);
+                        s.kill();
+                    }
+                    for (Iterator<Bullet> a = Bullets.iterator(); a.hasNext(); ) {
+                        Bullet b = a.next();
+                        if (b.GetX() > s.GetX() && b.GetX() < s.GetX() + 91 && b.GetY() >= s.GetY() && b.GetY() <= s.GetY() + 91) {
+                            s.decHP();
+                            a.remove();
+
+                        }
+                    } //если патрон попадает в противника, то патрон удаляется и хп снижается
+                } //если противник за пределами экрана, удаляем его, а если его хп меньше 0, то убиваем
+                if (x >= 10550 && enemycount == 0) {
+                    win = true;
+                } //если дошли до конца и нет врага, то опобеда
+                for (Iterator<EnemyBullet> i = EnemyBulls.iterator(); i.hasNext(); ) {
+                    EnemyBullet b = i.next();
+                    if (b.GetX() - x < 0) {
+                        i.remove();
+                    } //если патрон за экраном, то удаляем его
+                    if (b.GetX() > HeroX && b.GetX() < HeroX + 115 && b.GetY() > HeroY && b.GetY() < HeroY + 217 && !sitdown) {
+                        Music.getMusic().EnemyPopal();
+                        i.remove();
+                        if (HP > 0) {
+                            HP -= 10;
+                        }
+                        if (HP == 0) {
+                            gameover = true;
+                        }
+                    }
+                } //если попали по герою, удалить патрон и снять хп, если хп=0 то игра окончена
                 repaint();
             }
         }
+
 
         );
 // Запускаем таймер:
@@ -308,44 +392,6 @@ public class Engine extends JComponent {
             x1 = -x % imageWidth - imageWidth;
         }
         g.drawImage(background, x1, 0, this);
-
-        if (sitdown && !jumping) {
-            switch (sitmodelcount) {
-                case 1:
-                    image = modelSittingDown1;
-                    break;
-                case 2:
-                    image = modelSittingDown2;
-                    break;
-                case 3:
-                    image = modelSittingDown3;
-                    break;
-            } //определяем, какая картинка должна быть загружена когда садимся
-        } else if (situp) {
-            switch (sitmodelcount) {
-                case 0:
-                    image = modelStop;
-                    break;
-                case 1:
-                    image = modelSittingDown1;
-                    break;
-                case 2:
-                    image = modelSittingDown2;
-                    break;
-                case 3:
-                    image = modelSittingDown3;
-                    situp = false;
-                    break;
-            } //определяем, какая картинка должна быть загружена когда встаем
-
-        } else if (jumping || falling) {
-            image = modelJump;
-        } else {
-            image = dx != 0 ? modelWalk : modelStop;
-        }
-        HeroX = x + 50;
-        HeroY = getHeight() - 265 - y;
-        EnemyY = getHeight() - 220;
         //координаты героя по x и y, противника y
         if (image == modelSittingDown3) {
             g.drawImage(image, HeroX - x + (isright ? 0 : 140), HeroY + 71, isright ? 124 : -124, 146, this);
@@ -353,25 +399,7 @@ public class Engine extends JComponent {
             g.drawImage(image, HeroX - x + (isright ? 0 : 140), HeroY, isright ? 140 : -140, 225, this);
         }
         g.setColor(Color.white);
-        for (Iterator<Bullet> i = Bullets.iterator(); i.hasNext(); ) {
-            Bullet s = i.next();
-            if (s.GetX() - x > screenWidth + 15 || s.GetX() - x < -20) {
-
-                //Bullets.remove(s);
-                i.remove();
-            }
-        } // если патрон уходит за пределы экрана, удаляем его
-        for (Iterator<Enemy> i = prtvnk.iterator(); i.hasNext(); ) {
-            Enemy s = i.next();
-            if (s.GetX() - x + 100 < 0 || s.GetX() - x > screenWidth + 20) {
-                i.remove();
-            }
-            if (s.GetHP() <= 0) {
-                //Bullets.remove(s);
-                s.kill();
-            }
-        } //если противник за пределами экрана, удаляем его, а если его хп меньше 0, то убиваем
-        int enemycount = 0; //счетчик противников
+        enemycount = 0; //счетчик противников
         for (Enemy s : prtvnk) {
             boolean objenemyfound = false;
             for (EnvObj d : objcts) {
@@ -397,40 +425,15 @@ public class Engine extends JComponent {
                 enemycount++;
             } else g.drawImage(EnemyDown, s.GetX() - x, s.GetY(), 80, 185, this);
             //логика поиска героя и атака врага
-            for (Iterator<Bullet> i = Bullets.iterator(); i.hasNext(); ) {
-                Bullet b = i.next();
-                if (b.GetX() > s.GetX() && b.GetX() < s.GetX() + 91 && b.GetY() >= s.GetY() && b.GetY() <= s.GetY() + 91) {
-                    s.decHP();
-                    i.remove();
-
-                }
-            } //если патрон попадает в противника, то патрон удаляется и хп снижается
-
         }
         for (Bullet b : Bullets) {
             g.drawImage(PatronHero, b.GetX() - x, b.GetY(), 22, 21, this);
-        } //прорисовываем все патроны
+        } //прорисовываем все патроны героя
         for (Iterator<EnemyBullet> i = EnemyBulls.iterator(); i.hasNext(); ) {
             EnemyBullet b = i.next();
             g.drawImage(PatronHero, b.GetX() - x, b.GetY(), 22, 21, this);
-            if (b.GetX() - x < 0) {
-                i.remove();
-            } //если патрон за экраном, то удаляем его
-            if (b.GetX() > HeroX && b.GetX() < HeroX + 115 && b.GetY() > HeroY && b.GetY() < HeroY + 217 && !sitdown) {
-                Music.getMusic().EnemyPopal();
-                i.remove();
-                if (HP > 0) {
-                    HP -= 10;
-                }
-                if (HP == 0) {
-                    gameover = true;
-                }
-            }
-        } //есчи попали по герою, удалить патрон и снять хп, если хп=0 то игра окончена
-        if (x >= 10550 && enemycount == 0) {
-            win = true;
-        } //если дошли до конца и нет врага, то опобеда
 
+        } //рисуем вражеские патроны
         g.draw3DRect(screenWidth - 300, 20, 230, 45, true);
         g.setColor(Color.red);
         g.fillRect(screenWidth - 300, 20, 230 * HP / 100, 45);
