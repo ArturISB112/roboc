@@ -59,7 +59,11 @@ public class Engine extends JComponent {
     public Engine() throws IOException {
 // Загружаем изображение из файла:
         //загрузка изображений
-        background = ImageIO.read(getClass().getResource("game.png"));
+        BufferedImage tmpBack = ImageIO.read(getClass().getResource("game.png"));
+        background = new BufferedImage(tmpBack.getWidth(), tmpBack.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics g = background.getGraphics();
+        g.drawImage(tmpBack, 0, 0, null);
+        g.dispose();
         modelStop = getToolkit().getImage(getClass().getResource("herostop.png"));
         modelWalk = getToolkit().getImage(getClass().getResource("model3.gif"));
         modelJump = getToolkit().getImage(getClass().getResource("herojump.png"));
